@@ -6,7 +6,7 @@ const photoSchema = new Schema({
   name: {
     type: String,
     required: true,
-    tryim: true,
+    trim: true,
   },
   description: {
     type: String,
@@ -20,4 +20,5 @@ const photoSchema = new Schema({
 });
 
 const Photo = mongoose.model("Photo", photoSchema);
+
 export default Photo;
