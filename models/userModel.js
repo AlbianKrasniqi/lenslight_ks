@@ -27,10 +27,10 @@ const userSchema = new Schema(
 
 userSchema.pre("save", function (next) {
   const user = this;
-  console.log("user password 1", user.password);
+
   bcrypt.hash(user.password, 10, (err, hash) => {
     user.password = hash;
-    console.log("user pass 2", user.password);
+
     next();
   });
 });
