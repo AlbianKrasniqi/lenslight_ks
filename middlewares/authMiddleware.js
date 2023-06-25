@@ -1,24 +1,22 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 
-const autheticateToken = async (req, res, next) => {
+const authenticateToken = async (req, res, next) => {
   try {
-    const token =
-      req.headers["authorization"] &&
-      req.headers["authorization"].split(" ")[1];
+    const token = req.cookies.jwt;
 
-    if (!token) {
-      return res.status(401).json({
-        succeeded: false,
-        err: "No token available",
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET, (err) => {
+        if (err) {
+          console.log(err.message);
+          res.redirect("/login");
+        } else {
+          next();
+        }
       });
+    } else {
+      res.redirect("/login");
     }
-
-    req.user = await User.findById(
-      jwt.verify(token, process.env.JWT_SECRET).userId
-    );
-
-    next();
   } catch (err) {
     res.status(401).json({
       succeeded: false,
@@ -27,4 +25,4 @@ const autheticateToken = async (req, res, next) => {
   }
 };
 
-export { autheticateToken };
+export { authenticateToken };
