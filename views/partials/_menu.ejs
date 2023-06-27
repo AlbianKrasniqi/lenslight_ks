@@ -23,6 +23,24 @@
                   >Photos</a
                 >
               </li>
+
+              <% if (user){ %>
+              <li>
+                <a
+                  class="<%= link ==='dashboard' && 'active' %>"
+                  href="/users/dashboard"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="/logout">Logout</a>
+              </li>
+              <%} else { %>
+              <li>
+                <a class="<%= link ==='login' && 'active' %>" href="/login"
+                  >Login</a
+                >
+              </li>
               <li>
                 <a
                   class="<%= link ==='register' && 'active' %>"
@@ -30,11 +48,7 @@
                   >Register</a
                 >
               </li>
-              <li>
-                <a class="<%= link ==='login' && 'active' %>" href="/login"
-                  >Login</a
-                >
-              </li>
+              <% }%>
 
               <!-- <li><a href="services.html">Services</a></li>
               <li><a href="projects.html">Projects</a></li>
