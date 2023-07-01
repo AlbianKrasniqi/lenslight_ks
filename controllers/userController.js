@@ -79,4 +79,36 @@ const getDashboardPage = async (req, res) => {
   });
 };
 
-export { createUser, loginUser, getDashboardPage };
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({ _id: { $ne: res.locals.user._id } });
+    res.status(201).render("users", {
+      users,
+      link: "users",
+    });
+  } catch (err) {
+    res.status(500).json({
+      succeed: false,
+      err,
+    });
+  }
+};
+
+const getUser = async (req, res) => {
+  try {
+    const user = await User.findById({ _id: req.params.id });
+    const photos = await Photo.find({ user: res.locals.user._id });
+    res.status(201).render("user", {
+      user,
+      photos,
+      link: "user",
+    });
+  } catch (err) {
+    res.status(500).json({
+      succeed: false,
+      err,
+    });
+  }
+};
+
+export { createUser, loginUser, getDashboardPage, getAllUsers, getUser };
