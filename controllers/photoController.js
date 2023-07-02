@@ -42,11 +42,6 @@ const getAllPhotos = async (req, res) => {
       photos,
       link: "photos",
     });
-
-    res.status(201).render("photos", {
-      photos,
-      link: "photos",
-    });
   } catch (err) {
     res.status(500).json({
       succeed: false,

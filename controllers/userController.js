@@ -73,6 +73,10 @@ const createToken = (userId) => {
 
 const getDashboardPage = async (req, res) => {
   const photos = await Photo.find({ user: res.locals.user._id });
+  const user = await User.findById({ _id: res.locals.user._id }).populate([
+    "followings",
+    "followers",
+  ]);
   res.render("dashboard", {
     link: "dashboard",
     photos,
@@ -97,7 +101,7 @@ const getAllUsers = async (req, res) => {
 const getUser = async (req, res) => {
   try {
     const user = await User.findById({ _id: req.params.id });
-    const photos = await Photo.find({ user: res.locals.user._id });
+    const photos = await Photo.find({ user: user._id });
     res.status(201).render("user", {
       user,
       photos,
@@ -111,4 +115,68 @@ const getUser = async (req, res) => {
   }
 };
 
-export { createUser, loginUser, getDashboardPage, getAllUsers, getUser };
+const follow = async (req, res) => {
+  try {
+    let user = await User.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $push: { followers: res.locals.user._id } },
+      { new: true }
+    );
+
+    user = await User.findByIdAndUpdate(
+      {
+        _id: res.locals.user._id,
+      },
+      { $push: { following: res.params.id } },
+      { new: true }
+    );
+
+    res.status(200).json({
+      succeded: true,
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      succeed: false,
+      err,
+    });
+  }
+};
+
+const unfollow = async (req, res) => {
+  try {
+    let user = await User.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $pull: { followers: res.locals.user._id } },
+      { new: true }
+    );
+
+    user = await User.findByIdAndUpdate(
+      {
+        _id: res.locals.user._id,
+      },
+      { $pull: { following: res.params.id } },
+      { new: true }
+    );
+
+    res.status(200).json({
+      succeded: true,
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      succeed: false,
+      err,
+    });
+  }
+};
+
+export {
+  createUser,
+  loginUser,
+  getDashboardPage,
+  getAllUsers,
+  getUser,
+  follow,
+  unfollow,
+};
