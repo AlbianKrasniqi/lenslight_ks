@@ -14,7 +14,7 @@ router
   .get(authMiddleware.authenticateToken, userController.getAllUsers);
 router
   .route("/:id")
-  .post(authMiddleware.authenticateToken, userController.getUser);
+  .get(authMiddleware.authenticateToken, userController.getUser);
 router
   .route("/:id/follow")
   .put(authMiddleware.authenticateToken, userController.follow);
