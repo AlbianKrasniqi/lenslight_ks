@@ -11,8 +11,6 @@ const createPhoto = async (req, res) => {
     }
   );
 
-  console.log("Result", result);
-
   try {
     await Photo.create({
       name: req.body.name,
@@ -82,4 +80,41 @@ const deletePhoto = async (req, res) => {
   }
 };
 
-export { createPhoto, getAllPhotos, getPhoto, deletePhoto };
+const updatePhoto = async (req, res) => {
+  try {
+    const photo = await Photo.findById(req.params.id);
+    if (req.files) {
+      const photoId = photo.image_id;
+
+      await cloudinary.uploader.destroy(photoId);
+
+      const result = await cloudinary.uploader.upload(
+        req.files.image.tempFilePath,
+        {
+          use_filename: true,
+          folder: "lenslight_ks",
+        }
+      );
+
+      photo.url = result.secure_url;
+      photo.image_id = result.public_id;
+
+      // delete photo
+      fs.unlinkSync(req.files.image.tempFilePath);
+    }
+
+    photo.name = req.body.name;
+    photo.description = req.body.description;
+
+    photo.save();
+
+    res.status(200).redirect(`/photos/${req.params.id}`);
+  } catch (err) {
+    res.status(500).json({
+      succeed: false,
+      err,
+    });
+  }
+};
+
+export { createPhoto, getAllPhotos, getPhoto, deletePhoto, updatePhoto };
