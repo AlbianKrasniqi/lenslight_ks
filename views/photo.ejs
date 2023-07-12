@@ -1,6 +1,6 @@
 <%- include("partials/_header") %>
-
 <!-- body -->
+
 <body class="main-layout inner_page">
   <!-- loader  -->
   <div class="loader_bg">
@@ -11,7 +11,6 @@
   <!-- header -->
   <%- include("partials/_menu") %>
   <!-- end header inner -->
-
   <!-- about -->
   <div class="about">
     <div class="container">
@@ -20,9 +19,11 @@
           <div class="titlepage text_align_left">
             <h3 style="font-size: 24px !important"><%= photo.name %></h3>
             <p><%= photo.description %></p>
-            <a class="read_more" href="/users/<%= photo.user._id %>"
-              >Artist: <%= photo.user.username %></a
-            >
+            <a class="read_more" href="/users/<%= photo.user._id %>">
+              Artist: <%= photo.user.username %>
+            </a>
+
+            <% if (isOwner) { %>
 
             <div style="margin-top: 30px">
               <ul style="display: flex; justify-content: space-between">
@@ -47,6 +48,8 @@
                 </li>
               </ul>
             </div>
+
+            <% }%>
           </div>
         </div>
         <div class="col-md-6">
@@ -65,7 +68,6 @@
   </div>
   <!-- end about -->
   <!-- end footer -->
-
   <div
     id="updateModal"
     class="modal fade bd-example-modal-lg"
@@ -145,5 +147,5 @@
     </div>
   </div>
 
-  <%- include("partials/_footer.ejs") %>
+  <%- include("partials/_footer") %>
 </body>
